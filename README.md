@@ -14,7 +14,7 @@ A full-stack agentic RAG (Retrieval-Augmented Generation) application that allow
 
 ### Backend (Node.js/Express)
 - **Server**: Express.js API server with CORS and file upload support
-- **Agent**: LangChain ReAct agent with OpenAI GPT-4o
+- **Agent**: LangChain ReAct agent with a local Ollama model (`qwen2.5-coder:7b` by default)
 - **Vector Database**: Pinecone for document storage and similarity search
 - **Embeddings**: Pinecone-hosted `llama-text-embed-v2` model
 - **Observability**: LangSmith for tracing and monitoring
@@ -30,7 +30,7 @@ A full-stack agentic RAG (Retrieval-Augmented Generation) application that allow
 - Node.js (v18 or higher)
 - npm or yarn
 - Pinecone account with index created
-- OpenAI API key
+- Ollama installed with the `qwen2.5-coder:7b` model
 - LangSmith account (optional, for observability)
 
 ## 🛠️ Setup
@@ -46,16 +46,19 @@ A full-stack agentic RAG (Retrieval-Augmented Generation) application that allow
    npm run install:all
    ```
 
-3. **Environment Configuration**
+3. **Prepare the local model**
+   ```bash
+   ollama pull qwen2.5-coder:7b
+   ```
+   Keep Ollama running locally while using the application. You can select another installed model by setting `OLLAMA_MODEL`.
+
+4. **Environment Configuration**
    ```bash
    cp .env.example .env
    ```
 
-   Edit `.env` with your API keys:
+   Configure Pinecone credentials in `.env`:
    ```env
-   # LLM
-   OPENAI_API_KEY=your_openai_api_key
-   
    # Vector DB (Pinecone)
    PINECONE_API_KEY=your_pinecone_api_key
    PINECONE_INDEX=your_pinecone_index_name
@@ -122,6 +125,8 @@ agentic-personal-assistant/
 5. Agent uses retrieved context to generate response
 6. Response is sent back to user and added to conversation history
 
+Chat generation runs locally through Ollama. PDF documents and their embeddings are still stored in Pinecone.
+
 ## 🔧 Key Components
 
 ### Agent (`server/agent.js`)
@@ -169,7 +174,7 @@ agentic-personal-assistant/
 
 - **Backend**: Node.js, Express.js, Multer
 - **Frontend**: React, Vite
-- **AI/ML**: LangChain, OpenAI GPT-4o
+- **AI/ML**: LangChain, Ollama
 - **Vector DB**: Pinecone
 - **Observability**: LangSmith
 - **Development**: Concurrently, ESLint

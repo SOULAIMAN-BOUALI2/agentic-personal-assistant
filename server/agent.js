@@ -1,4 +1,4 @@
-import { ChatOpenAI } from "@langchain/openai";
+import { ChatOllama } from "@langchain/ollama";
 import { createAgent } from "langchain";
 import { MemorySaver } from "@langchain/langgraph-checkpoint";
 import { searchKnowledgeBase } from "./tools.js";
@@ -8,8 +8,8 @@ const checkpointer = new MemorySaver();
 
 export async function runAgent({ sessionId = "default", message }) {
   try {
-    const model = new ChatOpenAI({
-      model: "gpt-4o",
+    const model = new ChatOllama({
+      model: process.env.OLLAMA_MODEL || "qwen2.5-coder:7b",
       temperature: 0,
     });
 
